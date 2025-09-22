@@ -114,8 +114,13 @@ def go(config: DictConfig):
             # Run the train_random_forest component
             # We pass the latest trainval data as trainval_artifact, the rf_config we just serialized,
             # and other parameters from the config.yaml
+
+            train_rf_path = os.path.join(
+                hydra.utils.get_original_cwd(), "components", "train_random_forest"
+            )
+
             _ = mlflow.run(
-                f"{config['main']['components_repository']}/train_random_forest",
+                train_rf_path,
                 "main",
                 parameters={
                     "trainval_artifact": "trainval_data.csv:latest",
@@ -129,6 +134,7 @@ def go(config: DictConfig):
                 env_manager="conda"
             )
             ##################
+
 
 
         if "test_regression_model" in active_steps:
