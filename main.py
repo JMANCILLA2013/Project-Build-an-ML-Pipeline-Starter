@@ -69,9 +69,12 @@ def go(config: DictConfig):
             ##################
 
         if "data_check" in active_steps:
+            data_check_path = os.path.join(
+                hydra.utils.get_original_cwd(), "src", "data_check"
+            )
             ##################
             _ = mlflow.run(
-                "src/data_check",  # local folder
+                data_check_path,  # local folder
                 entry_point="main",
                 env_manager="conda",
                 parameters={
