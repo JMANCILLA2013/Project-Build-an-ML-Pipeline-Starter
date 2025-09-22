@@ -1,5 +1,4 @@
 import json
-
 import mlflow
 import tempfile
 import os
@@ -18,7 +17,6 @@ _steps = [
     # then you need to run this step explicitly
 #    "test_regression_model"
 ]
-
 
 # This automatically reads in the configuration
 @hydra.main(config_name='config')
@@ -52,15 +50,36 @@ def go(config: DictConfig):
 
         if "basic_cleaning" in active_steps:
             ##################
-            # Implement here #
+            _ = mlflow.run(
+                "src/basic_cleaning",  # local folder
+                entry_point="main",
+                env_manager="conda",
+                parameters={
+                    "input_artifact": "sample.csv:latest",
+                    "output_artifact": "clean_sample.csv",
+                    "output_type": "cleaned_data",
+                    "output_description": "Cleaned version of the sample data",
+                    "min_price": config["etl"]["min_price"],
+                    "max_price": config["etl"]["max_price"]
+                }
+            )
             ##################
-            pass
 
         if "data_check" in active_steps:
             ##################
-            # Implement here #
+            _ = mlflow.run(
+                "src/data_check",  # local folder
+                entry_point="main",
+                env_manager="conda",
+                parameters={
+                    "input_csv": "clean_sample.csv:latest",
+                    "ref_csv": "clean_sample.csv:reference",
+                    "kl_threshold": config["data_check"]["kl_threshold"],
+                    "min_price": config["etl"]["min_price"],
+                    "max_price": config["etl"]["max_price"]
+                }
+            )
             ##################
-            pass
 
         if "data_split" in active_steps:
             ##################
