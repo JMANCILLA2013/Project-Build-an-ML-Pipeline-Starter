@@ -111,10 +111,25 @@ def go(config: DictConfig):
             # step
 
             ##################
-            # Implement here #
+            # Run the train_random_forest component
+            # We pass the latest trainval data as trainval_artifact, the rf_config we just serialized,
+            # and other parameters from the config.yaml
+            _ = mlflow.run(
+                f"{config['main']['components_repository']}/train_random_forest",
+                "main",
+                parameters={
+                    "trainval_artifact": "trainval_data.csv:latest",
+                    "rf_config": rf_config,
+                    "val_size": config["modeling"]["val_size"],
+                    "random_seed": config["modeling"]["random_seed"],
+                    "stratify_by": config["modeling"]["stratify_by"],
+                    "max_tfidf_features": config["modeling"]["max_tfidf_features"],
+                    "output_artifact": "random_forest_export"
+                },
+                env_manager="conda"
+            )
             ##################
 
-            pass
 
         if "test_regression_model" in active_steps:
 
