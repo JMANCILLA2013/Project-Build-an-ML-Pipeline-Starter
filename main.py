@@ -121,7 +121,7 @@ def go(config: DictConfig):
 
             _ = mlflow.run(
                 train_rf_path,
-                "main",
+                entry_point="main",
                 parameters={
                     "trainval_artifact": "trainval_data.csv:latest",
                     "rf_config": rf_config,
