@@ -50,8 +50,11 @@ def go(config: DictConfig):
 
         if "basic_cleaning" in active_steps:
             ##################
+            basic_cleaning_path = os.path.join(
+                hyrda.utils.get_original_cwd(), "src", "basic_cleaning"
+            )
             _ = mlflow.run(
-                "src/basic_cleaning",  # local folder
+                basic_cleaning_path,  # local folder
                 entry_point="main",
                 env_manager="conda",
                 parameters={
